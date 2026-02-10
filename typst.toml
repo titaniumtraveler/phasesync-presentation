@@ -1,0 +1,4 @@
+[package]
+name = "presentation"
+version = "0.0.0"
+entrypoint = "src/bin/main.typ"

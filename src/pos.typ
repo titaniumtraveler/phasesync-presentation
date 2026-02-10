@@ -27,14 +27,16 @@
 #let as_size(pos) = as_dict(pos, "width", "height")
 
 /// - pos ((x: relative, y: relative)):
+/// - body (content)
+/// - alignment (alignment)
 /// -> content
-#let place_at(pos, body) = {
+#let place_at(pos, body, alignment: top + left) = {
   let pos = {
     let (x, y: y) = pos
     (dx: x, dy: y)
   }
   box(place(
-    top + left,
+    alignment,
     ..pos,
     body,
   ))
@@ -57,7 +59,7 @@
   let line_margin = box_margin_width / (c.line.count + 1)
 
   (
-    size: (x: c.size.x),
+    size: (x: c.size.x, y: box_size.y + line_margin * (c.line.count - 1)),
 
     frame: (size: (x: box_width + box_margin_width)),
 
@@ -78,8 +80,6 @@
       margin: (size: (x: line_margin)),
       label: (size: (y: line_margin)),
     ),
-
-    // ..c,
   )
 }
 
@@ -88,7 +88,6 @@
   let c = config(c)
   (
     x: frame_idx * c.frame.size.x,
-    // y: c.box.margin.size.x,
     y: c.line.margin.size.x,
   )
 }
@@ -103,13 +102,13 @@
 #let line(c, frame_idx, line_idx) = {
   let c = config(c)
   let pos = frame(c, frame_idx)
-  pos.x += (line_idx + 1) * c.line.margin.size.x
+  pos.x += (c.line.count - line_idx) * c.line.margin.size.x
   pos
 }
 
 #let line_length(c, frame_idx, line_idx) = {
   let c = config(c)
-  c.box.size.y + c.line.label.size.y * (c.line.count - line_idx)
+  c.box.size.y + c.line.label.size.y * (c.line.count - line_idx - 1)
 }
 
 #let line_end(c, frame_idx, line_idx) = {
@@ -121,10 +120,5 @@
 
 #let line_label(c, frame_idx, line_idx) = {
   let c = config(c)
-  let pos = line_end(c, frame_idx, line_idx)
-
-  pos.x += 2pt
-  pos.y += 2pt - c.line.label.size.y
-
-  pos
+  line_end(c, frame_idx, line_idx)
 }
