@@ -3,7 +3,7 @@
     size: (x: 0% + 0pt),
 
     box: (
-      count: 8,
+      count: 4,
       margin: (
         ratio: (
           x: 2 / 5,
